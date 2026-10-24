@@ -5,8 +5,15 @@ function isObject(value: unknown): value is JsonObject {
 }
 
 const MAX_NODES = 200_000;
+const DATA_KEYS = new Set(['example', 'default', 'enum', 'const', 'value']);
+// Entries of these maps are named objects, not keywords or Reference Objects.
+const OBJECT_MAPS = new Set([
+  'properties', 'patternProperties', '$defs', 'definitions', 'dependentSchemas',
+  'schemas', 'responses', 'headers', 'content', 'paths', 'callbacks', 'links',
+  'requestBodies', 'securitySchemes', 'encoding', 'variables', 'examples',
+]);
 
-/** Inline every local `$ref`. Circular references become an open schema. */
+/** Inline local `$ref` outside literal data. Circular references become an open schema. */
 export function deref(node: unknown, root: JsonObject): unknown {
   let count = 0;
 
@@ -31,7 +38,7 @@ export function deref(node: unknown, root: JsonObject): unknown {
     return cur;
   };
 
-  const walk = (value: unknown, stack: string[]): unknown => {
+  const walk = (value: unknown, stack: string[], isMap = false): unknown => {
     if (++count > MAX_NODES) {
       throw new Error('Spec expands to too many nodes while resolving $ref');
     }
@@ -42,7 +49,7 @@ export function deref(node: unknown, root: JsonObject): unknown {
       return value;
     }
     const ref = value['$ref'];
-    if (typeof ref === 'string') {
+    if (!isMap && typeof ref === 'string') {
       const { $ref: _ignored, ...siblings } = value;
       void _ignored;
       if (stack.includes(ref)) {
@@ -54,7 +61,11 @@ export function deref(node: unknown, root: JsonObject): unknown {
     }
     const out: JsonObject = Object.create(null) as JsonObject;
     for (const [k, v] of Object.entries(value)) {
-      out[k] = walk(v, stack);
+      if (!isMap && (DATA_KEYS.has(k) || (k === 'examples' && Array.isArray(v)))) {
+        out[k] = v;
+      } else {
+        out[k] = walk(v, stack, !isMap && OBJECT_MAPS.has(k));
+      }
     }
     return out;
   };

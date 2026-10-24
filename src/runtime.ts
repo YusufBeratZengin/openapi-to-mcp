@@ -284,7 +284,10 @@ export function createExecutor(manifest: Manifest, deps: ExecutorDeps = {}): Exe
         } else if (p.in === 'query') {
           query.push(...queryPairs(p, value));
         } else {
-          const text = Array.isArray(value) ? value.map(scalar).join(',') : scalar(value);
+          const text = Array.isArray(value) ? value.map(scalar).join(',')
+            : isObject(value) ? Object.entries(value)
+              .map(([k, v]) => `${k}${p.explode ? '=' : ','}${scalar(v)}`).join(',')
+              : scalar(value);
           if (FORBIDDEN_HEADER_VALUE.test(text)) {
             throw new Error(`Invalid value for header "${p.name}"`);
           }
@@ -342,21 +345,13 @@ export function createExecutor(manifest: Manifest, deps: ExecutorDeps = {}): Exe
         signal: controller.signal,
       });
       const { text, truncated } = await readLimited(res, config.maxResponseBytes);
-      let shown = text;
-      if ((res.headers.get('content-type') ?? '').includes('json')) {
-        try {
-          shown = JSON.stringify(JSON.parse(text), null, 2);
-        } catch {
-          // keep the raw text when the server sent invalid JSON
-        }
-      }
       const location = res.status >= 300 && res.status < 400 ? res.headers.get('location') : null;
       const lines = [`HTTP ${res.status}${res.statusText ? ` ${res.statusText}` : ''}`];
       if (location) {
         lines.push(`Redirect not followed: ${location}`);
       }
-      if (shown) {
-        lines.push(shown);
+      if (text) {
+        lines.push(text);
       }
       if (truncated) {
         lines.push(`[response truncated at ${config.maxResponseBytes} bytes]`);

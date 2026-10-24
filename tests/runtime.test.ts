@@ -38,10 +38,10 @@ describe('request building', () => {
     expect(last().headers['x-request-id']).toBe('r-1');
   });
 
-  it('pretty-prints JSON responses', async () => {
+  it('preserves JSON response text', async () => {
     const r = await ex.execute('getPet', { petId: 7 });
     expect(last().url).toBe('/v1/pets/7');
-    expect(r.text).toContain('"method": "GET"');
+    expect(r.text).toContain('"method":"GET"');
   });
 
   it('encodes path values and rejects traversal', async () => {
