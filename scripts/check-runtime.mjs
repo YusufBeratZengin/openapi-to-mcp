@@ -22,7 +22,7 @@ try {
   assert.deepEqual(tools.map((tool) => tool.name), ['getPet']);
   const response = await client.callTool({ name: 'getPet', arguments: { petId: 1 } });
   assert.equal(response.isError, false);
-  assert.match(response.content[0].text, /"id": 1/);
+  assert.match(response.content[0].text, /"id":\s*1/);
   const missing = await client.callTool({ name: 'getPet', arguments: {} });
   assert.equal(missing.isError, true);
 } finally {
