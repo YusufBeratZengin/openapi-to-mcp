@@ -1,0 +1,81 @@
+{
+  "name": "openapi-to-mcp",
+  "version": "0.1.0",
+  "description": "Turn OpenAPI 3.0/3.1 specs into MCP tools: a stdio server or generated server code, read-only by default",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "openapi-to-mcp": "dist/bin.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.tr.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "examples",
+    "docs/demo.svg",
+    "scripts/make-demo.mjs"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && vitest run --coverage",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "demo": "npm run build && node scripts/make-demo.mjs",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "license": "MIT",
+  "author": "Yusuf Berat Zengin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YusufBeratZengin/openapi-to-mcp.git"
+  },
+  "homepage": "https://github.com/YusufBeratZengin/openapi-to-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/YusufBeratZengin/openapi-to-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "openapi",
+    "swagger",
+    "ai-agents",
+    "cli",
+    "code-generator",
+    "claude"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^10.13.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
+}

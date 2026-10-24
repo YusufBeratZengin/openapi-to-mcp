@@ -1,0 +1,154 @@
+openapi: 3.0.3
+info:
+  title: Petstore
+  version: 1.0.0
+servers:
+  - url: https://petstore.example.com/{basePath}
+    variables:
+      basePath:
+        default: v1
+tags:
+  - name: pets
+  - name: admin
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List pets
+      description: Returns pets, optionally filtered by status or tags.
+      tags: [pets]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of pets to return
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/Status' }
+        - name: tags
+          in: query
+          schema: { type: array, items: { type: string } }
+        - name: X-Request-Id
+          in: header
+          schema: { type: string }
+        - name: Authorization
+          in: header
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+    post:
+      operationId: createPet
+      summary: Add a pet
+      tags: [pets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewPet' }
+      responses:
+        '201': { description: Created }
+  /pets/{petId}:
+    parameters:
+      - $ref: '#/components/parameters/PetId'
+    get:
+      operationId: getPet
+      summary: Get one pet
+      tags: [pets]
+      responses:
+        '200': { description: OK }
+    put:
+      operationId: updatePet
+      summary: Replace a pet
+      tags: [pets]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewPet' }
+      responses:
+        '200': { description: OK }
+    delete:
+      operationId: deletePet
+      summary: Delete a pet
+      tags: [pets, admin]
+      responses:
+        '204': { description: Deleted }
+  /owners/{ownerId}/pets:
+    get:
+      operationId: listOwnerPets
+      summary: List the pets of one owner
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: filter
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            properties:
+              species: { type: string }
+              minAge: { type: integer }
+      responses:
+        '200': { description: OK }
+  /categories:
+    get:
+      operationId: listCategories
+      summary: Category tree
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Category' }
+  /login:
+    post:
+      operationId: login
+      summary: Exchange credentials for a session
+      tags: [admin]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [user, password]
+              properties:
+                user: { type: string }
+                password: { type: string }
+      responses:
+        '200': { description: OK }
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200': { description: OK }
+components:
+  parameters:
+    PetId:
+      name: petId
+      in: path
+      required: true
+      description: Numeric pet id
+      schema: { type: integer }
+  schemas:
+    Status:
+      type: string
+      enum: [available, pending, sold]
+    NewPet:
+      type: object
+      required: [name]
+      properties:
+        id: { type: integer, readOnly: true }
+        name: { type: string, example: Rex }
+        status: { $ref: '#/components/schemas/Status' }
+        nickname: { type: string, nullable: true }
+        weight: { type: number, minimum: 0, exclusiveMinimum: true }
+    Category:
+      type: object
+      properties:
+        name: { type: string }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/Category' }

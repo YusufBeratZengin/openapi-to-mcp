@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="510" viewBox="0 0 760 510" role="img" aria-labelledby="title desc">
+  <title id="title">openapi-to-mcp turns an OpenAPI spec into MCP tools</title>
+  <desc id="desc">Real output of the list command and of examples/call-tool.mjs, which serves the petstore spec and calls the getPet tool against a local fake API.</desc>
+  <rect x="1" y="1" width="758" height="508" rx="16" fill="#0d1117" stroke="#30363d"/>
+  <path d="M17 1h726a16 16 0 0 1 16 16v33H1V17A16 16 0 0 1 17 1Z" fill="#161b22"/>
+  <circle cx="25" cy="25" r="6" fill="#ff5f57"/>
+  <circle cx="45" cy="25" r="6" fill="#febc2e"/>
+  <circle cx="65" cy="25" r="6" fill="#28c840"/>
+  <text x="380" y="30" text-anchor="middle" fill="#8b949e" font-family="monospace" font-size="13">openapi-to-mcp</text>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14" xml:space="preserve">
+    <text x="32" y="86" fill="#a5b4fc">$ openapi-to-mcp list examples/petstore.yaml</text>
+    <text x="32" y="107" fill="#d1d5db">listPets        GET    /pets</text>
+    <text x="32" y="128" fill="#d1d5db">getPet          GET    /pets/{petId}</text>
+    <text x="32" y="149" fill="#d1d5db">listOwnerPets   GET    /owners/{ownerId}/pets</text>
+    <text x="32" y="170" fill="#d1d5db">listCategories  GET    /categories</text>
+    <text x="32" y="191" fill="#d1d5db">get_health      GET    /health</text>
+    <text x="32" y="212" fill="#d1d5db"></text>
+    <text x="32" y="233" fill="#d1d5db">5 tools, 4 skipped (4 write-disabled)</text>
+    <text x="32" y="254" fill="#d1d5db"></text>
+    <text x="32" y="275" fill="#a5b4fc">$ node examples/call-tool.mjs</text>
+    <text x="32" y="296" fill="#d1d5db">tools: listPets, getPet, listOwnerPets, listCategories, get_health</text>
+    <text x="32" y="317" fill="#fbbf24">&gt; getPet {&quot;petId&quot;:1}</text>
+    <text x="32" y="338" fill="#d1d5db">HTTP 200 OK</text>
+    <text x="32" y="359" fill="#d1d5db">{</text>
+    <text x="32" y="380" fill="#d1d5db">  &quot;id&quot;: 1,</text>
+    <text x="32" y="401" fill="#d1d5db">  &quot;name&quot;: &quot;Rex&quot;,</text>
+    <text x="32" y="422" fill="#d1d5db">  &quot;status&quot;: &quot;available&quot;</text>
+    <text x="32" y="443" fill="#d1d5db">}</text>
+    <text x="32" y="464" fill="#fbbf24">&gt; createPet {&quot;body&quot;:{&quot;name&quot;:&quot;Milo&quot;}}</text>
+    <text x="32" y="485" fill="#d1d5db">isError=true: Unknown tool &quot;createPet&quot;</text>
+  </g>
+</svg>

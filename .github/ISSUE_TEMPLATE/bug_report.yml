@@ -1,0 +1,45 @@
+name: Bug report
+description: Report incorrect behavior, using a small synthetic spec.
+title: "bug: "
+labels: [bug]
+body:
+  - type: checkboxes
+    id: searched
+    attributes:
+      label: Before reporting
+      options:
+        - label: I searched existing issues and removed all credentials and personal data.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: openapi-to-mcp version
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Operating system and Node.js version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Steps, the command line, and the smallest OpenAPI snippet that triggers the problem.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and logs
+      description: Redact tokens, hostnames and personal data.
+    validations:
+      required: true
