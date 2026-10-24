@@ -33,7 +33,7 @@ jobs:
       - run: node examples/library.mjs
       - run: npm run demo
       - run: npm pack --dry-run
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.os == 'ubuntu-latest' && matrix.node == 24
         with:
           name: compiled-runtime
